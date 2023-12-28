@@ -21,6 +21,7 @@ type PictureRepository interface {
 	UpdatePicture(picture *model.Picture) error
 	DeletePicture(id int) error
 	AssignTagById(pId int, tId int) error
+	GetWithTags(tags []model.Tag) ([]model.Picture, error)
 }
 
 func NewSQLPictureRepository(db *sql.DB) *SQLPictureRepository {
