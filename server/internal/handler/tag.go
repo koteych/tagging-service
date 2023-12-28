@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"log"
 	"net/http"
 	"picture_tagger_api/internal/service"
 
@@ -12,8 +13,9 @@ type TagHandler struct {
 }
 
 func (h *TagHandler) GetAll(c *gin.Context) {
-
-	c.JSON(http.StatusOK, gin.H{
-		"status": "ok",
-	})
+	tags, err := h.TagService.GetAll()
+	if err != nil {
+		log.Fatal("Problem retrieving tags list")
+	}
+	c.JSON(http.StatusOK, tags)
 }
