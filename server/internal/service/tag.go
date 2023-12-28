@@ -17,3 +17,7 @@ func NewTagService(pictureRepo repository.PictureRepository, tagRepo repository.
 func (s *TagService) FindByName(name string) ([]model.Tag, error) {
 	return s.tagRepo.FindByName(name)
 }
+
+func (s *TagService) GetAll() ([]model.Tag, error) {
+	return s.tagRepo.GetAll()
+}

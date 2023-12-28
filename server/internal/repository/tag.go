@@ -13,6 +13,7 @@ type TagRepository interface {
 	CreateTag(tag *model.Tag) (*model.Tag, error)
 	DeleteTag(id int) error
 	FindByName(name string) ([]model.Tag, error)
+	GetAll() ([]model.Tag, error)
 }
 
 func NewSQLTagRepository(db *sql.DB) *SQLTagRepository {
@@ -67,6 +68,34 @@ func (r *SQLTagRepository) FindByName(name string) ([]model.Tag, error) {
 	for rows.Next() {
 		var tag model.Tag
 		err := rows.Scan(&tag.ID, &tag.Name)
+		if err != nil {
+			return nil, err
+		}
+
+		tags = append(tags, tag)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return tags, nil
+}
+
+func (r *SQLTagRepository) GetAll() ([]model.Tag, error) {
+	query := "SELECT id, tag_name, tag_desc, tag_alias, is_hidden FROM tags"
+
+	rows, err := r.db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var tags []model.Tag
+
+	for rows.Next() {
+		var tag model.Tag
+		err := rows.Scan(&tag.ID, &tag.Name, &tag.Desc, &tag.Alias, &tag.IsHidden)
 		if err != nil {
 			return nil, err
 		}

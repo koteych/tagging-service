@@ -37,6 +37,8 @@ func main() {
 		TagService: *tagService,
 	}
 
+	fmt.Println(tagService.GetAll())
+
 	r.POST("/api/pictures/:picture_id/assign-tag/:tag_id", pictureHandler.AssignTagById)
 
 	r.GET("/api/tags", tagHandler.GetAll)
