@@ -26,6 +26,17 @@ export default function () {
             });
     }, []);
 
+    useEffect(() => {
+        axios.post('api/pictures/get-by-tag-names', {tags: ["abc", "hello"]})
+            .then(response => {
+                console.log(response.data)
+                //setData(response.data);
+            })
+            .catch(error => {
+                console.error('Error fetching data: ', error);
+            });
+    }, []);
+
     const onPageChange = (event: any) => {
         setFirst(event.first);
         setRows(event.rows);
