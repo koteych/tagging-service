@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Paginator } from 'primereact/paginator';
 import { Chips } from 'primereact/chips';
 import { SpeedDial } from 'primereact/speeddial';
 import { InputSwitch } from "primereact/inputswitch";
+import axios from 'axios';
 import './test.css'
 
 export default function () {
@@ -11,6 +12,19 @@ export default function () {
 
     const [first, setFirst] = useState(0);
     const [rows, setRows] = useState(10);
+
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+        axios.get('api/tags')
+            .then(response => {
+                console.log(response.data)
+                setData(response.data);
+            })
+            .catch(error => {
+                console.error('Error fetching data: ', error);
+            });
+    }, []);
 
     const onPageChange = (event: any) => {
         setFirst(event.first);
@@ -60,12 +74,19 @@ export default function () {
 
         {/* <TabsComponent /> */}
 
+        <div>
+            {/* Render fetched data */}
+            {data.map((item: any) => (
+                <div key={item.id}>{item.name}</div>
+            ))}
+        </div>
+
         <div className="container mx-auto px-5 py-2 lg:px-32 lg:pt-12">
             <div className="card p-fluid w-1/2">
                 <Chips value={value} onChange={(e) => { setValue(e.value as any); console.log(value) }} />
             </div>
 
-            <div className="" style={{textAlign: 'right'}}>
+            <div className="" style={{ textAlign: 'right' }}>
                 <InputSwitch checked={displayMode} onChange={(e) => setDisplayMode(e.value)} />
             </div>
 
