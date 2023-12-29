@@ -35,6 +35,7 @@ func main() {
 	}
 
 	r.POST("/api/pictures/:picture_id/assign-tag/:tag_id", pictureHandler.AssignTagById)
+	r.POST("/api/pictures/get-by-tag-names", pictureHandler.GetByTagNames)
 
 	r.GET("/api/tags", tagHandler.GetAll)
 
