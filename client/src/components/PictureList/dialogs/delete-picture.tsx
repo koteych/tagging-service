@@ -53,7 +53,7 @@ export const PictureDeleteDialog: FC<DeleteDialogProps> = ({ dialogFlag, closeDi
                                     </p>
                                 </div>
 
-                                <div className="mt-4">
+                                <div className="mt-4 text-right">
                                     <button
                                         type="button"
                                         className="inline-flex justify-center rounded-md border border-transparent bg-red-100 px-4 py-2 text-sm font-medium text-red-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"

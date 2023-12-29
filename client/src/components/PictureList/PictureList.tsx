@@ -9,7 +9,7 @@ import axios from 'axios';
 import './picture-list.css'
 
 export default function () {
-    const [value, setValue] = useState(['lineart', 'aesthetic']);
+    const [tags, setTags] = useState(['hello']);
     const [displayMode, setDisplayMode] = useState<boolean>(false)
     const [pictures, setPictures] = useState([]);
     const [dialogFlag, setDialogFlag] = useState<boolean>(false);
@@ -27,14 +27,14 @@ export default function () {
     }
 
     useEffect(() => {
-        axios.post('api/pictures/get-by-tag-names', { tags: ["hello"] })
+        axios.post('api/pictures/get-by-tag-names', { tags: tags })
             .then(response => {
-                setPictures(response.data.pictures)
+                setPictures(response.data.pictures || [])
             })
             .catch(error => {
                 console.error('Error fetching data: ', error);
             });
-    }, []);
+    }, [tags]);
 
     const onPageChange = (event: any) => {
         setFirst(event.first);
@@ -87,7 +87,7 @@ export default function () {
 
         <div className="container mx-auto px-5 py-2 lg:px-32 lg:pt-12">
             <div className="card p-fluid w-1/2">
-                <Chips value={value} onChange={(e) => { setValue(e.value as any); console.log(value) }} />
+                <Chips value={tags} onChange={(e) => { setTags(e.value as any); }} />
             </div>
 
             <div className="" style={{ textAlign: 'right' }}>
