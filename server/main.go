@@ -14,6 +14,8 @@ import (
 func main() {
 	r := gin.Default()
 
+	r.Static("/static", "./pictures")
+
 	db, err := utils.InitDB()
 	if err != nil {
 		log.Fatal("Failed to connect to database:", err)
