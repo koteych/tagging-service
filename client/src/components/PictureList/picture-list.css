@@ -10,3 +10,7 @@
 .p-speeddial-action {
     color: white;
 }
+
+input#tag-name {
+    padding: 10px;
+}
