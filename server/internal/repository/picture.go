@@ -55,22 +55,32 @@ func (r *SQLPictureRepository) AssignTagById(pId int, tId int) error {
 	return err
 }
 
+// if tags is an empty slice then we will retrieve all pictures there are
 func (r *SQLPictureRepository) GetWithTags(tags []model.Tag) ([]model.Picture, error) {
 	var tagNames []interface{}
 
 	for _, tag := range tags {
 		tagNames = append(tagNames, tag.Name)
 	}
+	var rows *sql.Rows
+	var err error
 
-	query := `SELECT p.*
-	FROM pictures p
-	JOIN picture_tag_link ptl ON p.id = ptl.picture_id
-	JOIN tags t ON ptl.tag_id = t.id
-	WHERE t.tag_name IN (` + placeholders(len(tagNames)) + `)
-	GROUP BY p.id
-	HAVING COUNT(DISTINCT t.id) = ` + strconv.Itoa(len(tagNames)) + `;`
+	if len(tagNames) > 0 {
+		query := `SELECT p.*
+		FROM pictures p
+		JOIN picture_tag_link ptl ON p.id = ptl.picture_id
+		JOIN tags t ON ptl.tag_id = t.id
+		WHERE t.tag_name IN (` + placeholders(len(tagNames)) + `)
+		GROUP BY p.id
+		HAVING COUNT(DISTINCT t.id) = ` + strconv.Itoa(len(tagNames)) + `;`
 
-	rows, err := r.db.Query(query, tagNames...)
+		rows, err = r.db.Query(query, tagNames...)
+	} else {
+		query := `SELECT * FROM pictures p;`
+
+		rows, err = r.db.Query(query, tagNames...)
+	}
+
 	if err != nil {
 		return nil, err
 	}
