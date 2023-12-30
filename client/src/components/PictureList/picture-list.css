@@ -14,3 +14,27 @@
 input#tag-name {
     padding: 10px;
 }
+
+.p-multistatecheckbox {
+    border: transparent;
+    width: 30px;
+    height: 30px;
+}
+
+.p-multistatecheckbox .p-checkbox{
+    border: transparent;
+    width: 30px;
+    height: 30px;
+}
+
+.p-multistatecheckbox .p-component{
+    border: transparent;
+    width: 30px;
+    height: 30px;
+}
+
+.p-multistatecheckbox .p-checkbox-box {
+    border: transparent;
+    width: 30px;
+    height: 30px;
+}

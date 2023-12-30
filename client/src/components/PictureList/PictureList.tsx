@@ -2,15 +2,17 @@ import { useState, useEffect } from "react";
 import { Paginator } from 'primereact/paginator';
 import { Chips } from 'primereact/chips';
 import { PictureItem } from "./PictureItem";
-import { InputSwitch } from "primereact/inputswitch";
 import { PictureAddTagDialog } from './dialogs/add-tag'
 import { PictureDeleteDialog } from './dialogs/delete-picture'
+import {DisplayModeSwitcher} from './DisplayModeSwitcher'
 import axios from 'axios';
 import './picture-list.css'
 
+export type DisplayMode = "small" | "medium" | "large"
+
 export default function () {
     const [tags, setTags] = useState(['hello']);
-    const [displayMode, setDisplayMode] = useState<boolean>(false)
+    const [displayMode, setDisplayMode] = useState<DisplayMode>("medium")
     const [pictures, setPictures] = useState([]);
     const [dialogFlag, setDialogFlag] = useState<boolean>(false);
     const [dialogType, setDialogType] = useState<string>("none");
@@ -91,12 +93,13 @@ export default function () {
             </div>
 
             <div className="" style={{ textAlign: 'right' }}>
-                <InputSwitch checked={displayMode} onChange={(e) => setDisplayMode(e.value)} />
+                {/* <InputSwitch checked={displayMode} onChange={(e) => setDisplayMode(e.value)} /> */}
+                <DisplayModeSwitcher mode={displayMode} handler={setDisplayMode}/>
             </div>
 
             <div className="-m-1 flex flex-wrap md:-m-2">
                 {pictures.map((pic: any) => (
-                    <PictureItem pic={pic} controlItems={items} />
+                    <PictureItem mode={displayMode} pic={pic} controlItems={items} />
                 ))}
 
             </div>
