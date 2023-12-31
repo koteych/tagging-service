@@ -3,6 +3,7 @@ package repository
 import (
 	"database/sql"
 	"picture_tagger_api/internal/model"
+	"picture_tagger_api/pkg/utils"
 	"strconv"
 	"strings"
 )
@@ -94,6 +95,8 @@ func (r *SQLPictureRepository) GetWithTags(tags []model.Tag) ([]model.Picture, e
 		if err != nil {
 			return nil, err
 		}
+
+		pic.Source = utils.GetPictureURL(pic)
 
 		pics = append(pics, pic)
 	}
