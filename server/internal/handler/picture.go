@@ -34,6 +34,15 @@ func (h *PictureHandler) AssignTagById(c *gin.Context) {
 
 func (h *PictureHandler) GetByTagNames(c *gin.Context) {
 
+	page, err := strconv.Atoi(c.Query("page"))
+	if err != nil {
+		page = 0
+	}
+	pageSize, err := strconv.Atoi(c.Query("pageSize"))
+	if err != nil {
+		pageSize = 10
+	}
+
 	type Tags struct {
 		Data []string `json:"tags"`
 	}
@@ -52,7 +61,16 @@ func (h *PictureHandler) GetByTagNames(c *gin.Context) {
 		})
 	}
 
+	startIndex := (page - 1) * pageSize
+	endIndex := startIndex + pageSize
+	if endIndex > len(pictures) {
+		endIndex = len(pictures)
+	}
+
+	paginatedPictures := pictures[startIndex:endIndex]
+
 	c.JSON(http.StatusOK, gin.H{
-		"pictures": pictures,
+		"pictures": paginatedPictures,
+		"total":    len(pictures),
 	})
 }
