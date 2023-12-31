@@ -18,7 +18,11 @@ export default function () {
     const [dialogType, setDialogType] = useState<string>("none");
 
     const [first, setFirst] = useState(0);
-    const [rows, setRows] = useState(10);
+    const [rows, setRows] = useState(5);
+    const [total, setTotal] = useState(0);
+
+    const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(5);
 
     function closeDialog() {
         setDialogFlag(false)
@@ -29,16 +33,19 @@ export default function () {
     }
 
     useEffect(() => {
-        axios.post('api/pictures/get-by-tag-names', { tags: tags })
+        axios.post(`api/pictures/get-by-tag-names?page=${page}&pageSize=${pageSize}`, { tags: tags })
             .then(response => {
                 setPictures(response.data.pictures || [])
+                setTotal(response.data.total || 0);
             })
             .catch(error => {
                 console.error('Error fetching data: ', error);
             });
-    }, [tags]);
+    }, [tags, page, pageSize]);
 
     const onPageChange = (event: any) => {
+        console.log(event.page)
+        setPage(event.page+1)
         setFirst(event.first);
         setRows(event.rows);
     };
@@ -103,7 +110,7 @@ export default function () {
                 ))}
 
             </div>
-            <Paginator first={first} rows={rows} totalRecords={120} onPageChange={onPageChange} />
+            <Paginator first={(page-1)*pageSize} rows={pageSize} totalRecords={total} onPageChange={onPageChange} />
         </div>
     </>;
 }
