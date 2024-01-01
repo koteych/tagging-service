@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"picture_tagger_api/internal/model"
 	"picture_tagger_api/internal/service"
 	"strconv"
 
@@ -30,6 +31,23 @@ func (h *PictureHandler) AssignTagById(c *gin.Context) {
 		"picture_id": picId,
 		"tag_id":     tagId,
 	})
+}
+
+func (h *PictureHandler) AddTag(c *gin.Context) {
+	var tagDTO AddTagDTO
+
+	if err := c.ShouldBindJSON(&tagDTO); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": true})
+		return
+	}
+
+	err := h.PictureService.AddTag(tagDTO.PictureId, model.Tag{ID: 0, Name: tagDTO.Name, Desc: tagDTO.Desc, Alias: tagDTO.Alias})
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": true})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"ok": true})
 }
 
 func (h *PictureHandler) GetByTagNames(c *gin.Context) {

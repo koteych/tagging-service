@@ -19,7 +19,34 @@ func (s *PictureService) AssignTagById(pId int, tId int) error {
 	return err
 }
 
-func (s *PictureService) AddTag(name string) error {
+func (s *PictureService) AddTag(picId int, tag model.Tag) error {
+	foundTag, err := s.tagRepo.GetByName(tag.Name)
+	if err != nil {
+		return err
+	}
+
+	if foundTag != nil {
+		err = s.pictureRepo.AssignTagById(picId, foundTag.ID)
+		if err != nil {
+			return err
+		}
+	}
+
+	_, err = s.tagRepo.CreateTag(&tag)
+	if err != nil {
+		return err
+	}
+
+	newTag, err := s.tagRepo.GetByName(tag.Name)
+	if err != nil {
+		return err
+	}
+
+	err = s.pictureRepo.AssignTagById(picId, newTag.ID)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 

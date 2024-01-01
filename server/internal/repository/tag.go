@@ -14,6 +14,7 @@ type TagRepository interface {
 	DeleteTag(id int) error
 	FindByName(name string) ([]model.Tag, error)
 	GetAll() ([]model.Tag, error)
+	GetByName(name string) (*model.Tag, error)
 }
 
 func NewSQLTagRepository(db *sql.DB) *SQLTagRepository {
