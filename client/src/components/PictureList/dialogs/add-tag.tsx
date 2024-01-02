@@ -1,9 +1,44 @@
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { Dialog, Transition } from '@headlessui/react';
 import { InputText } from "primereact/inputtext";
-// import axios from 'axios';
+import axios from 'axios';
 
-export const PictureAddTagDialog = ({dialogFlag, closeDialog}: any) => {
+export const PictureAddTagDialog = ({ dialogFlag, closeDialog, options }: any) => {
+    const [formData, setFormData] = useState({
+        pictureId: 0,
+        name: '',
+        alias: '',
+        desc: ''
+    });
+
+    const handleChange = (event: any) => {
+        const { value } = event.target;
+        setFormData({ ...formData, name: value })
+    }
+
+    const handleOk = () => {
+        makeRequest();
+        closeDialog()
+    }
+
+    const makeRequest = () => {
+        axios.post(
+            `api/pictures/add-tag`,
+            {
+                picture_id: options.pictureId,
+                tag_name: formData.name,
+                tag_alias: formData.alias,
+                tag_desc: formData.desc,
+            }
+        )
+            .then(response => {
+                console.log(response.data)
+            })
+            .catch(error => {
+                console.error('Error sending request: ', error);
+            });
+    }
+
     return <>
         <Transition appear show={dialogFlag} as={Fragment}>
             <Dialog as="div" className="relative z-10" onClose={closeDialog}>
@@ -39,14 +74,14 @@ export const PictureAddTagDialog = ({dialogFlag, closeDialog}: any) => {
                                 </Dialog.Title>
                                 <div className="mt-2">
                                     <p className="text-sm text-gray-500">
-                                       
+                                        <span>Picture ID: {options.pictureId}</span>
                                     </p>
                                 </div>
 
 
                                 <div className="flex flex-col gap-2">
                                     <label htmlFor="tag-name">Tag name</label>
-                                    <InputText id="tag-name" aria-describedby="tag-name" />
+                                    <InputText id="tag-name" aria-describedby="tag-name" onChange={handleChange} />
                                     <small id="tag-name-help">
                                         Creates a new tag and adds it to a picture
                                     </small>
@@ -58,7 +93,14 @@ export const PictureAddTagDialog = ({dialogFlag, closeDialog}: any) => {
                                         className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                                         onClick={closeDialog}
                                     >
-                                        Ok
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                                        onClick={handleOk}
+                                    >
+                                        Save
                                     </button>
                                 </div>
                             </Dialog.Panel>

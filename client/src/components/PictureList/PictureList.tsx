@@ -14,8 +14,10 @@ export default function () {
     const [tags, setTags] = useState(['hello']);
     const [displayMode, setDisplayMode] = useState<DisplayMode>("medium")
     const [pictures, setPictures] = useState([]);
+    
     const [dialogFlag, setDialogFlag] = useState<boolean>(false);
     const [dialogType, setDialogType] = useState<string>("none");
+    const [dialogOptions, setDialogOptions] = useState({});
 
     const [first, setFirst] = useState(0);
     const [rows, setRows] = useState(5);
@@ -50,48 +52,14 @@ export default function () {
         setRows(event.rows);
     };
 
-    const items = [
-        {
-            label: 'Add',
-            icon: 'pi pi-pencil',
-            command: () => {
-                setDialogType('add-tag')
-                openDialog();
-            }
-        },
-        {
-            label: 'Update',
-            icon: 'pi pi-refresh',
-            command: () => {
-                //toast.current.show({ severity: 'success', summary: 'Update', detail: 'Data Updated' });
-            }
-        },
-        {
-            label: 'Delete',
-            icon: 'pi pi-trash',
-            command: () => {
-                setDialogType('delete-picture')
-                openDialog();
-            }
-        },
-        {
-            label: 'Upload',
-            icon: 'pi pi-upload',
-            command: () => {
-                //router.push('/fileupload');
-            }
-        },
-        {
-            label: 'React Website',
-            icon: 'pi pi-external-link',
-            command: () => {
-                window.location.href = 'https://react.dev/';
-            }
-        }
-    ];
+    const showDialog = (dialogType: any, options: any) => {
+        setDialogType(dialogType)
+        setDialogOptions(options)
+        openDialog();
+    }
 
     return <>
-        {(dialogType === 'add-tag') && <PictureAddTagDialog dialogFlag={dialogFlag} closeDialog={closeDialog} />}
+        {(dialogType === 'add-tag') && <PictureAddTagDialog options={dialogOptions} dialogFlag={dialogFlag} closeDialog={closeDialog} />}
         {(dialogType === 'delete-picture') && <PictureDeleteDialog options={{ pictureId: 1 }} dialogFlag={dialogFlag} closeDialog={closeDialog} />}
 
         <div className="container mx-auto px-5 py-2 lg:px-32 lg:pt-12">
@@ -106,7 +74,7 @@ export default function () {
 
             <div className="-m-1 flex flex-wrap md:-m-2">
                 {pictures.map((pic: any) => (
-                    <PictureItem mode={displayMode} pic={pic} controlItems={items} />
+                    <PictureItem mode={displayMode} pic={pic} handler={showDialog}/>
                 ))}
 
             </div>
