@@ -43,5 +43,7 @@ func main() {
 
 	r.GET("/api/tags", tagHandler.GetAll)
 
+	r.POST("/api/upload", handler.UploadImageHandler)
+
 	r.Run()
 }
