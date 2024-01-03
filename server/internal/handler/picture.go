@@ -92,3 +92,24 @@ func (h *PictureHandler) GetByTagNames(c *gin.Context) {
 		"total":    len(pictures),
 	})
 }
+
+func (h *PictureHandler) GetTags(c *gin.Context) {
+	picId, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"ok": false,
+		})
+	}
+
+	tags, err := h.PictureService.GetTags(picId)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"ok": false,
+		})
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"tags":      tags,
+		"pictureId": picId,
+	})
+}

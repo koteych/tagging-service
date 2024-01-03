@@ -23,6 +23,7 @@ type PictureRepository interface {
 	DeletePicture(id int) error
 	AssignTagById(pId int, tId int) error
 	GetWithTags(tags []model.Tag) ([]model.Picture, error)
+	GetTags(picId int) ([]model.Tag, error)
 }
 
 func NewSQLPictureRepository(db *sql.DB) *SQLPictureRepository {
@@ -37,6 +38,32 @@ func (r *SQLPictureRepository) CreatePicture(picture *model.Picture) (*model.Pic
 		return nil, err
 	}
 	return picture, nil
+}
+
+func (r *SQLPictureRepository) GetTags(picId int) ([]model.Tag, error) {
+	query := "select t.* from tags t join picture_tag_link ptl on ptl.tag_id = t.id where ptl.picture_id = ?;"
+
+	rows, err := r.db.Query(query, picId)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var tags []model.Tag
+
+	for rows.Next() {
+		var tag model.Tag
+
+		err := rows.Scan(&tag.ID, &tag.Name, &tag.Alias, &tag.Desc, &tag.IsHidden)
+		if err != nil {
+			return nil, err
+		}
+
+		tags = append(tags, tag)
+	}
+
+	return tags, nil
 }
 
 func (r *SQLPictureRepository) DeletePicture(id int) error {

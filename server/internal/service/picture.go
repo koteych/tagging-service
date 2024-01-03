@@ -65,3 +65,7 @@ func (s *PictureService) GetWithTagNames(tagNames []string) ([]model.Picture, er
 
 	return s.pictureRepo.GetWithTags(tags)
 }
+
+func (s *PictureService) GetTags(picId int) ([]model.Tag, error) {
+	return s.pictureRepo.GetTags(picId)
+}
